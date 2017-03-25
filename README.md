@@ -1,6 +1,8 @@
 # Login
 
-* mix.exs
+* Adicionar o Coherence arquivo mix.exs
+
+```elixir
 defp deps do
   [{:phoenix, "~> 1.2.1"},
    {:phoenix_pubsub, "~> 1.0"},
@@ -18,6 +20,8 @@ def application do
    applications: [:coherence, :phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
                   :phoenix_ecto, :postgrex]]
 end
+
+```
 
 // run mix deps.get
 
