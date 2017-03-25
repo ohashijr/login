@@ -23,11 +23,16 @@ end
 
 ```
 
-// run mix deps.get
+* Executar os comandos
 
-// mix ecto.create
+```shell
+run mix deps.get
 
-* router.ex
+mix ecto.create
+```
+* Configurar o arquivo router.ex
+
+```elixir
 defmodule Login.Router do
   use Login.Web, :router
   use Coherence.Router         # Add this
@@ -76,16 +81,21 @@ defmodule Login.Router do
   end
 
 end
+```
 
-* mix coherence.install --full-invitable
+* Executar o comando, para gerar os arquivos de configuração, views, controllers, ... do Coherence
 
-* priv/repo/seeds.exs
+```shell
+mix coherence.install --full-invitable
+```
+* Criar alguns usuários para teste no arquivo priv/repo/seeds.exs adicionar:
 
+```elixir
 Login.Repo.delete_all Login.User
 
 Login.User.changeset(%Login.User{}, %{name: "Test User", email: "testuser@example.com", password: "secret", password_confirmation: "secret"})
 |> Login.Repo.insert!
-
+```
 * config.ex
 
 # Import environment specific config. This must remain at the bottom
