@@ -1,11 +1,11 @@
 # Login
 
-* Gerar (scaffold) Posts
+* Gerar CRUD dos Post
 ```elixir
 mix phoenix.gen.html Post posts title body:text
 ```
 
-* Adicionando as rotas, no arquivo routes.ex adicionar, sem autenticação nenhuma primeiro
+* Adicionando as rotas, no arquivo _routes.ex_ adicionar, sem autenticação nenhuma primeiro
 ```elixir
 scope "/", Login do
   pipe_through :browser
@@ -45,12 +45,12 @@ end
 
 * Executar os comandos
 
-```shell
+```bash
 run mix deps.get
 
 mix ecto.create
 ```
-* Configurar o arquivo router.ex
+* Configurar o arquivo _router.ex_
 
 ```elixir
 defmodule Login.Router do
@@ -109,9 +109,9 @@ end
 mix coherence.install --full-invitable
 ```
 
-* Alterar o arquivo config.ex
+* Alterar o arquivo _config.ex_
 
-O Coherence adiciona algumas configurações no arquivo config.ex, o que faz com que o trecho de codigo a baixo não fique no final do arquivo, alterar as linhas para o final do arquivo.
+O Coherence adiciona algumas configurações no arquivo _config.ex_ , o que faz com que o trecho de codigo a baixo não fique no final do arquivo, alterar as linhas para o final do arquivo.
 
 ```elixir
 # Import environment specific config. This must remain at the bottom
@@ -119,7 +119,7 @@ O Coherence adiciona algumas configurações no arquivo config.ex, o que faz com
 import_config "#{Mix.env}.exs"
 ```
 
-* O Coherence cria um usuário para o sistema, vamos adicionar alguns usuários para teste. No arquivo priv/repo/seeds.exs adicionar:
+* O Coherence cria um usuário para o sistema, vamos adicionar alguns usuários para teste. No arquivo _priv/repo/seeds.exs_ adicionar:
 
 ```elixir
 Login.Repo.delete_all Login.User
@@ -138,7 +138,7 @@ mix ecto.setup
 
 * Neste exemplo, o objetivo é que qualquer usuário do sistema consiga acessar os posts, porém
 apenas usuários autenticados possam criar, editar ou deletar os posts. No arquivo router.ex
-altere as seguintes linhas de código. É necessário inverter as regras, caso contrário o /posts/new será mapeado para o /posts/show, a ordem das rotas é extremamente importante.
+altere as seguintes linhas de código. É necessário inverter as regras, caso contrário o _/posts/new_ será mapeado para o _/posts/show_, a ordem das rotas é extremamente importante.
 
 ```elixir
 scope "/", Login do
@@ -157,7 +157,7 @@ end
 
 Apenas os usuários logados no sistema conseguiram criar (new), alterar (edit) e deletar (delete) posts.
 
-* Vamos adicionar o menu de navegação, no arquivo web/templates/layout/app.html.eex, adicione o seguinte trecho de código no header.
+* Vamos adicionar o menu de navegação, no arquivo _web/templates/layout/app.html.eex_ , adicione o seguinte trecho de código no header.
 
 ```html
 <header class="header">
@@ -177,7 +177,7 @@ Apenas os usuários logados no sistema conseguiram criar (new), alterar (edit) e
 ```
 
 * Retirar o link de criação, quando o usuário não estiver logado. Alterar no arquivo
-/templates/post/index.html.ex
+_/templates/post/index.html.ex_
 
 ```elixir
 <%= if Coherence.logged_in?(@conn) do %>
