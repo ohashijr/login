@@ -12,5 +12,8 @@
 
 Login.Repo.delete_all Login.User
 
-Login.User.changeset(%Login.User{}, %{name: "Test User", email: "testuser@example.com", password: "secret", password_confirmation: "secret"})
+Login.User.changeset(%Login.User{}, %{name: "Maria", email: "maria@gmail.com", password: "phoenix", password_confirmation: "phoenix"})
+|> Login.Repo.insert!
+
+Login.User.changeset(%Login.User{}, %{name: "Joao", email: "joao@gmail.com", password: "phoenix", password_confirmation: "phoenix"})
 |> Login.Repo.insert!

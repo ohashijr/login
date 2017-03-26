@@ -1,5 +1,25 @@
 # Login
 
+* Gerar (scaffold) Posts
+```elixir
+mix phoenix.gen.html Post posts title body:text
+```
+
+* Adicionando as rotas, no arquivo routes.ex adicionar, sem autenticação nenhuma primeiro
+```elixir
+scope "/", Login do
+  pipe_through :browser
+  get "/", PageController, :index
+  resources "/posts", PostController
+end
+```
+* Migrar a tabela dos posts
+```elixir
+mix ecto.migrate
+```
+
+Testar o CRUD dos posts, qualquer usuário pode realizar qualquer uma das operações.
+
 * Adicionar o Coherence arquivo mix.exs
 
 ```elixir
@@ -88,33 +108,58 @@ end
 ```shell
 mix coherence.install --full-invitable
 ```
-* Criar alguns usuários para teste no arquivo priv/repo/seeds.exs adicionar:
+
+* Alterar o arquivo config.ex
+
+O Coherence adiciona algumas configurações no arquivo config.ex, o que faz com que o trecho de codigo a baixo não fique no final do arquivo, alterar as linhas para o final do arquivo.
+
+```elixir
+# Import environment specific config. This must remain at the bottom
+# of this file so it overrides the configuration defined above.
+import_config "#{Mix.env}.exs"
+```
+
+* O Coherence cria um usuário para o sistema, vamos adicionar alguns usuários para teste. No arquivo priv/repo/seeds.exs adicionar:
 
 ```elixir
 Login.Repo.delete_all Login.User
 
-Login.User.changeset(%Login.User{}, %{name: "Test User", email: "testuser@example.com", password: "secret", password_confirmation: "secret"})
+Login.User.changeset(%Login.User{}, %{name: "Maria", email: "maria@gmail.com", password: "phoenix", password_confirmation: "phoenix"})
+|> Login.Repo.insert!
+
+Login.User.changeset(%Login.User{}, %{name: "Joao", email: "joao@gmail.com", password: "phoenix", password_confirmation: "phoenix"})
 |> Login.Repo.insert!
 ```
-* config.ex
 
-# Import environment specific config. This must remain at the bottom
-# of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+* Migrar e rodar os seeds
+```shell
+mix ecto.setup
+```
 
+* Neste exemplo, o objetivo é que qualquer usuário do sistema consiga acessar os posts, porém
+apenas usuários autenticados possam criar, editar ou deletar os posts. No arquivo router.ex
+altere as seguintes linhas de código. É necessário inverter as regras, caso contrário o /posts/new será mapeado para o /posts/show, a ordem das rotas é extremamente importante.
 
-* mix ecto.setup
-  migrate and generate seeds
+```elixir
+scope "/", Login do
+  pipe_through :protected
+  # Add protected routes below
+  resources "/posts", PostController, except: [:index, :show]
+end
 
-* Gerar Posts
-mix phoenix.gen.html Post posts title body:text
+scope "/", Login do
+  pipe_through :browser
+  get "/", PageController, :index
+  # Add public routes below
+  resources "/posts", PostController, only: [:index, :show]
+end
+```
 
-* add routes
-resources "/posts", PostController
+Apenas os usuários logados no sistema conseguiram criar (new), alterar (edit) e deletar (delete) posts.
 
-mix ecto.migrate
+* Vamos adicionar o menu de navegação, no arquivo web/templates/layout/app.html.eex, adicione o seguinte trecho de código no header.
 
-* web/templates/layout/app.html.eex
+```html
 <header class="header">
   <nav role="navigation">
     <ul class="nav nav-pills pull-right">
@@ -129,36 +174,16 @@ mix ecto.migrate
   </nav>
   <span class="logo"></span>
 </header>
+```
 
-O correto seria que qualquer usuário do sistema conseguisse acessar os posts, porém
-não fosse possivel criar, editar ou deletar os mesmos.
-
-* router.ex
-
-é necessário inverter as regras, senão o /posts/new será mapeado para o /posts/show
-
-scope "/", Login do
-  pipe_through :protected
-  # Add protected routes below
-  resources "/posts", PostController, except: [:index, :show]
-end
-
-scope "/", Login do
-  pipe_through :browser
-  get "/", PageController, :index
-  # Add public routes below
-  resources "/posts", PostController, only: [:index, :show]
-end
-
-* mostrar os links new, editar e delete apenas para os usuários logados no sistema
-
+* Retirar o link de criação, quando o usuário não estiver logado. Alterar no arquivo
 /templates/post/index.html.ex
 
-Só mostrar o link de novo post se o usuário estiver logado.
-
+```elixir
 <%= if Coherence.logged_in?(@conn) do %>
   <%= link "New post", to: post_path(@conn, :new) %>
 <% end %>
+```
 
 O edit e delete serão tratados na autorização.
 
