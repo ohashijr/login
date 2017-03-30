@@ -18,6 +18,7 @@ defmodule Login.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug Coherence.Authentication.Session, protected: true  # Add this
+    plug PolicyWonk.Enforce, :current_user
   end
 
   # Add this block
