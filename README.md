@@ -15,6 +15,7 @@ end
 ```
 * Migrar a tabela dos posts
 ```elixir
+mix ecto.create
 mix ecto.migrate
 ```
 
