@@ -15,14 +15,9 @@ scope "/", Login do
   resources "/posts", PostController
 end
 ```
-<<<<<<< HEAD
-* Migrar a tabela dos posts
-```elixir
-=======
 
 * Criar a base de dados e migrar a tabela dos posts
 ```shell
->>>>>>> policyWonk
 mix ecto.create
 mix ecto.migrate
 ```
