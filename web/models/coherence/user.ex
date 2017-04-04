@@ -7,6 +7,8 @@ defmodule Login.User do
     field :email, :string
     coherence_schema
 
+    has_many :posts, Login.Post
+
     timestamps
   end
 

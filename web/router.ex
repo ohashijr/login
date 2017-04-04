@@ -18,6 +18,7 @@ defmodule Login.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug Coherence.Authentication.Session, protected: true  # Add this
+    plug PolicyWonk.Enforce, :current_user
   end
 
   # Add this block
@@ -33,18 +34,16 @@ defmodule Login.Router do
   end
 
   scope "/", Login do
-    pipe_through :protected
-    # Add protected routes below
-    resources "/posts", PostController, except: [:index, :show]
-  end
-
-  scope "/", Login do
     pipe_through :browser
     get "/", PageController, :index
     # Add public routes below
-    resources "/posts", PostController, only: [:index, :show]
+
   end
 
-
+  scope "/", Login do
+    pipe_through :protected
+    # Add protected routes below
+    resources "/posts", PostController, except: [:index]
+  end
 
 end
