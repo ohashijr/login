@@ -34,18 +34,16 @@ defmodule Login.Router do
   end
 
   scope "/", Login do
-    pipe_through :protected
-    # Add protected routes below
-    resources "/posts", PostController, except: [:index, :show]
-  end
-
-  scope "/", Login do
     pipe_through :browser
     get "/", PageController, :index
     # Add public routes below
-    resources "/posts", PostController, only: [:index, :show]
+
   end
 
-
+  scope "/", Login do
+    pipe_through :protected
+    # Add protected routes below
+    resources "/posts", PostController, except: [:index]
+  end
 
 end

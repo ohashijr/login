@@ -5,6 +5,7 @@ defmodule Login.Post do
     field :title, :string
     field :body, :string
 
+    belongs_to :user, Login.User
     timestamps()
   end
 
@@ -13,7 +14,7 @@ defmodule Login.Post do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:title, :body])
+    |> cast(params, [:title, :body, :user_id])
     |> validate_required([:title, :body])
   end
 end
