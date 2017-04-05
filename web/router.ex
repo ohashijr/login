@@ -43,7 +43,7 @@ defmodule Login.Router do
   scope "/", Login do
     pipe_through :protected
     # Add protected routes below
-    resources "/posts", PostController, except: [:index]
+    resources "/posts", PostController
   end
 
 end
