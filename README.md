@@ -217,22 +217,22 @@ config :policy_wonk, PolicyWonk,
 ```elixir
 defmodule Login.Policies do
   use PolicyWonk.Enforce
-  @behaviour PolicyWonk.Policy
+  @behavior PolicyWonk.Policy
 
-  @err_handler    MyApp.ErrorHandlers
+  @err_handler Login.ErrorHandlers
 
-  def policy( assigns, :current_user ) do
+  def policy( assigns, :current_user) do
     case assigns[:current_user] do
-      _user = %MyApp.User{} -> :ok
-      _ ->    :current_user
+      _user = %Login.User{} -> :ok
+      _ -> :current_user
     end
   end
 
-  def policy_error(conn, error_data) when is_bitstring(error_data), do:
-    @err_handler.unauthorized(conn, error_data )
-  def policy_error(conn, error_data), do: policy_error(conn, "Unauthorized" )
+  def policy_error(conn, error_data) when is_bitstring(error_data), do: @err_handler.unauthorized(conn, error_data)
 
+  def policy_error(conn, error_data), do: policy_error(conn, "Unauthorized")
 end
+
 ```
 
 * É necessário fazer a associação entre Posts e Users, gerar a migration:
